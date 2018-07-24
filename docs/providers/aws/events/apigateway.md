@@ -1000,7 +1000,7 @@ service: service-a
 
 resources:
   Resources:
-    YourApiGateway:
+    YourApiGatewayResource:
       Type: AWS::ApiGateway::RestApi 
       Properties:
         Name: YourApiGatewayName
@@ -1008,26 +1008,26 @@ resources:
     Outputs:
       apiGatewayRestApiId:
         Value:
-          Ref: YourApiGatewayName
+          Ref: YourApiGatewayResource
         Export:
           Name: apiGateway-restApiId
       
       apiGatewayRestApiRootResourceId:
         Value:
            Fn::GetAtt:
-            - YourApiGateway
+            - YourApiGatewayResource
             - RootResourceId 
         Export:
           Name: apiGateway-rootResourceId
   
-  provider:
-    apiGateway:
-      restApiId: 
-        Ref: YourApiGatewayName
-      restApiResources:
-        Fn::GetAtt:
-            - YourApiGateway
-            - RootResourceId
+provider:
+  apiGateway:
+    restApiId: 
+      Ref: YourApiGatewayResource
+    restApiRootResourceId:
+      Fn::GetAtt:
+        - YourApiGatewayResource
+        - RootResourceId
 
 functions: ......
 ```
@@ -1041,9 +1041,9 @@ service: service-b
 provider:
   apiGateway:
     restApiId:
-      'Fn::ImportValue': apiGateway-restApiId
+      Fn::ImportValue: apiGateway-restApiId
     restApiRootResourceId:
-      'Fn::ImportValue': apiGateway-rootResourceId
+      Fn::ImportValue: apiGateway-rootResourceId
 
 ```
 
